@@ -5,14 +5,15 @@ const User = require("./models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+require("dotenv").config();
 
 const app = express();
 
-app.use(express.json()); 
+app.use(express.json());
 
-const port = 4000;
+const port = process.env.PORT || 4000; // Use process.env.PORT or default to 4000
 const secretkey = crypto.randomBytes(64).toString("hex");
-console.log(secretkey) 
+console.log(secretkey);
 
 // Generate a random secret key
 
@@ -23,19 +24,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-
-
-
-
 // Connect to MongoDB using your provided URI
 mongoose
-  .connect(
-    "mongodb+srv://allankiplagatkipkemei:0QDHSiKfEdlOtcBY@cluster0.n7khcjh.mongodb.net/test",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -95,28 +89,24 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post ('/logout ',(req, res) => {
-  //implement the Jwt deletion 
-  //
+app.post("/logout", (req, res) => {
+  // Implement the JWT deletion
+  // ...
 
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logout successful" });
+});
 
-
-
-  res.clearCookie('token');
-  res.status(200).json({message:'logout successful'});
-})
-
-
-app.delete('/delete_account', async (req, res) => {
+app.delete("/delete_account", async (req, res) => {
   try {
-    const userId= req.user.ID;
+    const userId = req.user.ID;
     await User.findByIdAndDelete(userId);
-    res.status(200).json({message:"User deleted successfully"})   
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({message:"Failed to delete user"})
+    res.status(500).json({ message: "Failed to delete user" });
   }
-  })
+});
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
