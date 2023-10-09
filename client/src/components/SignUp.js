@@ -12,39 +12,15 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { FaGoogle } from "react-icons/fa"; // Import Google icon from react-icons
 
 function SignUp() {
+  const handleGoogleSignIn = async () => {
+    // Your Google OAuth code here
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const userData = {
-      username: formData.get("username"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-    };
-
-    // Send a POST request to the signup endpoint on your backend
-    try {
-      const response = await fetch("http://localhost:4000/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      if (response.status === 200) {
-        console.log("Sign up successful!");
-
-        // Redirect to the login screen after 3 seconds
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 3000);
-      } else {
-        console.error("Sign up failed.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    // Your existing signup code here
   };
 
   return (
@@ -57,10 +33,7 @@ function SignUp() {
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"4xl"}>Sign up for an account</Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
-            Join us and enjoy all of our cool{" "}
-            <Text color={"blue.400"}>features</Text> ✌️
-          </Text>
+      
         </Stack>
         <Box
           as="form"
@@ -83,8 +56,9 @@ function SignUp() {
               <FormLabel>Password</FormLabel>
               <Input type="password" name="password" required />
             </FormControl>
-            <Stack spacing={10}>
+            <Stack spacing={4}>
               <Checkbox>Remember me</Checkbox>
+              <Flex align="center"></Flex>
               <Button
                 type="submit"
                 bg={"blue.400"}
@@ -94,6 +68,18 @@ function SignUp() {
                 }}
               >
                 Sign up
+              </Button>
+              <Text className="align-centre" >OR</Text>
+              <Button
+                onClick={handleGoogleSignIn}
+                bg={"red.500"}
+                color={"white"}
+                _hover={{
+                  bg: "red.600",
+                }}
+                leftIcon={<FaGoogle />} // Add Google icon
+              >
+                Sign up with Google
               </Button>
             </Stack>
           </Stack>
